@@ -38,6 +38,7 @@ help:
 	@echo '   ftp_upload                       upload the web site via FTP        '
 	@echo '   s3_upload                        upload the web site via S3         '
 	@echo '   github                           upload the web site via gh-pages   '
+	@echo '   post                             create new skeleton post           '
 	@echo '                                                                       '
 
 
@@ -85,4 +86,7 @@ github: publish
 	ghp-import $(OUTPUTDIR) -b master
 	git push origin master:master
 
-.PHONY: html help clean regenerate serve devserver publish ssh_upload rsync_upload dropbox_upload ftp_upload s3_upload github
+post:
+	@python $(BASEDIR)/new_post.py "$(INPUTDIR)"
+
+.PHONY: html help clean regenerate serve devserver publish ssh_upload rsync_upload dropbox_upload ftp_upload s3_upload github post
