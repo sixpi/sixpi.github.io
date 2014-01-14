@@ -28,3 +28,6 @@ FILES_TO_COPY = (('extra/CNAME', 'CNAME'),)
 # Piwik tracking
 PIWIK_URL = "piwik-bxia.rhcloud.com"
 PIWIK_SITE_ID = "1"
+
+# Disqus comments
+DISQUS_SITENAME = "bxianet"
