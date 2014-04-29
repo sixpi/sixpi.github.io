@@ -4,7 +4,7 @@ Category: System
 Tags: upstart, daemon, automation
 Slug: upstart-daemonizing
 Author: Bing Xia
-Summary: Figured out how to daemonize ipython notebook and emacs daemon using upstart
+Summary: Figured out how to daemonize ipython notebook and emacs daemon using upstart.
 
 Recently I've been trying to use IPython notebooks more while doing
 research. Since the notebook server needs to be started before you can
