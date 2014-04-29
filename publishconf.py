@@ -23,8 +23,6 @@ DELETE_OUTPUT_DIRECTORY = True
 #DISQUS_SITENAME = ""
 #GOOGLE_ANALYTICS = ""
 
-FILES_TO_COPY = (('extra/CNAME', 'CNAME'),)
-
 # Piwik tracking
 PIWIK_URL = "piwik-bxia.rhcloud.com"
 PIWIK_SITE_ID = "1"
