@@ -1,4 +1,8 @@
-import sys, os, datetime, re, subprocess
+#!/usr/bin/env python
+import sys
+import datetime
+import re
+import subprocess
 
 # get content folder from command line
 input_dir = sys.argv[1]
@@ -19,13 +23,12 @@ Summary:
 
 
 # open file and write metadata
-filepath = input_dir + '/' + post_title_slug + '.md'
+filepath = input_dir + '/' + today + "-" + post_title_slug + '.md'
 subprocess.call(['touch', filepath])
 
-f = open(filepath, 'r+b')
-f.write(metadata)
-f.close()
+with open(filepath, 'r+b') as f:
+    f.write(metadata)
 
-if f:
-    print '\n'
-    print 'NEW POST CREATED: %s' %(filepath)
+    if f:
+        print '\n'
+        print 'NEW POST CREATED: %s' %(filepath)
