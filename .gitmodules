@@ -1,0 +1,3 @@
+[submodule "pelican-octopress-theme"]
+	path = pelican-octopress-theme
+	url = git@github.com:sixpi/pelican-octopress-theme.git
