@@ -20,9 +20,6 @@ DELETE_OUTPUT_DIRECTORY = True
 
 # Following items are often useful when publishing
 
-#DISQUS_SITENAME = ""
-#GOOGLE_ANALYTICS = ""
-
 # Piwik tracking
 PIWIK_URL = "piwik-bxia.rhcloud.com"
 PIWIK_SITE_ID = "1"

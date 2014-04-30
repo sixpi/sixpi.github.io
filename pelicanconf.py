@@ -42,4 +42,4 @@ GITHUB_REPO_COUNT = 3
 GITHUB_SKIP_FORK = True
 GITHUB_SHOW_USER_LINK = True
 
-THEME = 'pelican-octopress-theme'
+THEME = 'pelican-octopress-theme/'
