@@ -117,7 +117,7 @@
 
   <section>
   <h1>Tags</h1>
-    <a href="http://bxia.net/tag/automatic.html">automatic</a>,    <a href="http://bxia.net/tag/pelican.html">pelican</a>,    <a href="http://bxia.net/tag/ci.html">CI</a>,    <a href="http://bxia.net/tag/python.html">python</a>,    <a href="http://bxia.net/tag/daemon.html">daemon</a>,    <a href="http://bxia.net/tag/upstart.html">upstart</a>,    <a href="http://bxia.net/tag/automation.html">automation</a>  </section>
+    <a href="http://bxia.net/tag/automatic.html">automatic</a>,    <a href="http://bxia.net/tag/ci.html">CI</a>,    <a href="http://bxia.net/tag/upstart.html">upstart</a>,    <a href="http://bxia.net/tag/automation.html">automation</a>,    <a href="http://bxia.net/tag/daemon.html">daemon</a>,    <a href="http://bxia.net/tag/python.html">python</a>,    <a href="http://bxia.net/tag/pelican.html">pelican</a>  </section>
 
 
 
@@ -155,17 +155,19 @@
       Copyright &copy; 2014 - Bing Xia -
   <span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
 </p></footer>
-    <script type="text/javascript">
-        var pkBaseURL = (("https:" == document.location.protocol) ? "https://piwik3-bxia.rhcloud.com/" : "http://piwik3-bxia.rhcloud.com/");
-    document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
-    </script><script type="text/javascript">
-        try {
-        var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", 1);
-        piwikTracker.trackPageView();
-        piwikTracker.enableLinkTracking();
-        } catch( err ) {}
-    </script>
-    <noscript><p><img src="http://piwik3-bxia.rhcloud.com/piwik.php?idsite=1" style="border:0" alt="" /></p></noscript>
+<script type="text/javascript">
+  var _paq = _paq || [];
+  // tracker methods like "setCustomDimension" should be called before "trackPageView"
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//piwik3-bxia.rhcloud.com/";
+    _paq.push(['setTrackerUrl', u+'piwik.php']);
+    _paq.push(['setSiteId', '1']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
 	<script type="text/javascript">
 	  var disqus_shortname = 'bxianet';
 	  (function() {
