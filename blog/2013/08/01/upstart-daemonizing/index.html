@@ -4,7 +4,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Bing's Blog</title>
+  <title>Daemonizing with Upstart</title>
   <meta name="author" content="Bing Xia">
 
 
@@ -40,56 +40,81 @@
     <li >
     <a href="http://bxia.net/category/misc.html">Misc</a>
     </li>
-    <li >
+    <li class="active">
     <a href="http://bxia.net/category/system.html">System</a>
     </li>
 </ul></nav>
   <div id="main">
     <div id="content">
-<div class="blog-index">
-  		<article>
+<div>
+  <article class="hentry" role="article">
 <header>
-      <h1 class="entry-title">
-        <a href="http://bxia.net/blog/2014/04/29/jenkins-ci-on-openshift/">Jenkins CI on Openshift</a>
-      </h1>
-      <p class="meta"><time datetime="2014-04-29T00:00:00-04:00" pubdate>Tue 29 April 2014</time></p>
-</header>
-
-  <div class="entry-content"><p>How to set up a free Jenkins build server on Openshift.</p></div>
-  <footer>
-    <a rel="full-article" href="http://bxia.net/blog/2014/04/29/jenkins-ci-on-openshift/">Read On &crarr;</a>
-  </footer>
-  		</article>
-  		<article>
-<header>
-      <h1 class="entry-title">
-        <a href="http://bxia.net/blog/2013/08/01/upstart-daemonizing/">Daemonizing with Upstart</a>
-      </h1>
+      <h1 class="entry-title">Daemonizing with Upstart</h1>
       <p class="meta"><time datetime="2013-08-01T00:00:00-04:00" pubdate>Thu 01 August 2013</time></p>
 </header>
 
-  <div class="entry-content"><p>Figured out how to daemonize ipython notebook and emacs daemon using upstart.</p></div>
-  <footer>
-    <a rel="full-article" href="http://bxia.net/blog/2013/08/01/upstart-daemonizing/">Read On &crarr;</a>
-  </footer>
-  		</article>
-  		<article>
-<header>
-      <h1 class="entry-title">
-        <a href="http://bxia.net/blog/2013/07/22/first-post/">First post with Pelican</a>
-      </h1>
-      <p class="meta"><time datetime="2013-07-22T00:00:00-04:00" pubdate>Mon 22 July 2013</time></p>
-</header>
+  <div class="entry-content"><p>Recently I've been trying to use IPython notebooks more while doing
+research. Since the notebook server needs to be started before you can
+use the awesomeness of IPython notebooks, I decided to try to find a
+method to automatically start my notebook server when I login.</p>
+<p>Since I do most of my development on Ubuntu, one obvious choice was
+<a href="http://upstart.ubuntu.com/">Upstart</a>. The 'Getting Started' page
+pointed me to the <a href="http://upstart.ubuntu.com/cookbook/">cookbook</a>,
+which I read through. I found the cookbook to be less of a cookbook,
+and more of a comprehensive reference for all the commands, which made
+it a little hard to get started. One thing that wasn't explained in
+the cookbook was how to enable session init management. However, I
+found a helpful page
+<a href="http://ifdeflinux.blogspot.com/2013/04/upstart-user-sessions-in-ubuntu-raring.html">here</a>
+which explained how to enable Upstart user sessions.</p>
+<p>After some experimentation, I was able to get the following conf file
+working:</p>
+<div class="highlight"><pre><span></span><span class="c1"># Job configuration for IPython Notebook</span>
+description <span class="s2">&quot;IPython Notebook&quot;</span>
 
-  <div class="entry-content"><p>This is me trying out blogging with Pelican for the first time.</p></div>
-  <footer>
-    <a rel="full-article" href="http://bxia.net/blog/2013/07/22/first-post/">Read On &crarr;</a>
-  </footer>
-  		</article>
-<div class="pagination">
+stop on runlevel<span class="o">[</span>06<span class="o">]</span>
 
-  <br />
-</div></div>
+respawn
+respawn limit <span class="m">10</span> <span class="m">5</span> <span class="c1"># respawn up to 10 times, waiting 5 seconds each time</span>
+
+pre-start script
+    <span class="o">[</span> ! -f <span class="nv">$HOME</span>/.virtualenvs/molpy3/bin/activate <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="o">{</span> stop<span class="p">;</span> <span class="nb">exit</span> 0<span class="p">;</span> <span class="o">}</span>
+
+    . <span class="nv">$HOME</span>/.virtualenvs/molpy3/bin/activate
+end script
+
+<span class="nb">exec</span> <span class="nv">$HOME</span>/.virtualenvs/molpy3/bin/ipython3 notebook --profile<span class="o">=</span>nbserver
+</pre></div>
+
+
+<p>This file should be placed in <code>$HOME/.config/upstart</code> with a <code>.conf</code>
+extension.</p>
+<p>While I was playing with Upstart, I also decided to daemonize my
+emacs. I already use <code>emacs --daemon</code> on my machine almost
+exclusively, but it would be nice for the emacs server to start
+automatically and be killed in a nice manner (saving unsaved files) on
+shutdown. The script for daemonizing emacs looks very similar, except
+that I have a <code>pre-stop</code> block which uses emacsclient to call
+<code>(save-some-buffers t)</code> before emacs is killed.</p></div>
+    <footer>
+<p class="meta">
+  <span class="byline author vcard">
+    Posted by <span class="fn">Bing Xia</span>
+  </span>
+<time datetime="2013-08-01T00:00:00-04:00" pubdate>Thu 01 August 2013</time>  <span class="categories">
+    <a class="category" href="http://bxia.net/tag/upstart.html">upstart</a>
+    <a class="category" href="http://bxia.net/tag/daemon.html">daemon</a>
+    <a class="category" href="http://bxia.net/tag/automation.html">automation</a>
+  </span>
+</p><div class="sharing">
+</div>    </footer>
+  </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div>
+  </section>
+</div>
 <aside class="sidebar">
   <section>
     <h1>Recent Posts</h1>
@@ -168,6 +193,9 @@
     <noscript><p><img src="http://piwik3-bxia.rhcloud.com/piwik.php?idsite=1" style="border:0" alt="" /></p></noscript>
 	<script type="text/javascript">
 	  var disqus_shortname = 'bxianet';
+          var disqus_identifier = '/blog/2013/08/01/upstart-daemonizing/';
+          var disqus_url = 'http://bxia.net/blog/2013/08/01/upstart-daemonizing/';
+          var disqus_title = 'Daemonizing with Upstart';
 	  (function() {
 	    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
 	    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';

@@ -4,7 +4,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Bing's Blog</title>
+  <title>Jenkins CI on Openshift</title>
   <meta name="author" content="Bing Xia">
 
 
@@ -37,7 +37,7 @@
 
 
 <ul class="main-navigation">
-    <li >
+    <li class="active">
     <a href="http://bxia.net/category/misc.html">Misc</a>
     </li>
     <li >
@@ -46,50 +46,78 @@
 </ul></nav>
   <div id="main">
     <div id="content">
-<div class="blog-index">
-  		<article>
+<div>
+  <article class="hentry" role="article">
 <header>
-      <h1 class="entry-title">
-        <a href="http://bxia.net/blog/2014/04/29/jenkins-ci-on-openshift/">Jenkins CI on Openshift</a>
-      </h1>
+      <h1 class="entry-title">Jenkins CI on Openshift</h1>
       <p class="meta"><time datetime="2014-04-29T00:00:00-04:00" pubdate>Tue 29 April 2014</time></p>
 </header>
 
-  <div class="entry-content"><p>How to set up a free Jenkins build server on Openshift.</p></div>
-  <footer>
-    <a rel="full-article" href="http://bxia.net/blog/2014/04/29/jenkins-ci-on-openshift/">Read On &crarr;</a>
-  </footer>
-  		</article>
-  		<article>
-<header>
-      <h1 class="entry-title">
-        <a href="http://bxia.net/blog/2013/08/01/upstart-daemonizing/">Daemonizing with Upstart</a>
-      </h1>
-      <p class="meta"><time datetime="2013-08-01T00:00:00-04:00" pubdate>Thu 01 August 2013</time></p>
-</header>
+  <div class="entry-content"><p>In this post, I'll describe how I set up a
+<a href="https://jenkins-ci.org/">Jenkins CI</a> server on
+<a href="https://www.openshift.com/">Openshift</a>. This will give you a
+continuous integration server which you have (almost) full control
+over, for free :).</p>
+<p>Openshift is a cloud computing offering by Red Hat, and they helpfully
+provides a pre-configured Jenkins application, which we will be
+using. After starting the new application process, you can choose from
+a number of "Instant Applications", which come ready to go. Just
+choose Jenkins Server from the list of instant apps, give your
+application a name (I called my "jenkins"), and wait for a little
+bit...and your application is created (make sure to note the username
+and password). Just point your browser to the provided URL and you
+should see your Jenkins app running happily :).</p>
+<p>After logging into Jenkins, there are a few things that you'll want to
+configure right away. By default, there are no executors to run your
+builds, so you'll probably want to set this to 1 (if you're on a free
+account and only have access to small gears). You may also want to
+configure add a new user with an API key if you want to trigger builds
+from other services (such as Bitbucket or Github). Also, many of the
+plugins (and Jenkins itself) are older versions, so update them if you
+want (if you don't see any updates, go to the advanced tab and click
+the "Check Now" button in the lower right).</p>
+<h4>Bitbucket integration</h4>
+<p>The next thing I wanted to do was enable my Jenkins instance to
+automatically build a project from Bitbucket whenever anyone pushed to
+it. While creating a new job in Jenkins, check the "Trigger builds
+remotely" checkbox. You'll need to create a authentication token (use
+a random password generator). Then, from Bitbucket, add a hook to the
+project you want to be automatically built. There is a Jenkins hook
+you can use - enter the base Jenkins URL, the job name from Jenkins,
+and the authentication token. This would normally be all you need to
+do to get everything working.</p>
+<p>However, there is a little more to be done since the Openshift doens't
+give you write access to the home directory. Because of this, SSH
+can't save the host key for the Bitbucket servers into
+<code>.ssh/known_hosts</code>. You can get around this by making a wrapper for
+ssh that <code>git</code> uses, as described
+<a href="https://www.openshift.com/forums/openshift/private-git-repo-clone-on-deploy">here</a>. I
+added the extra option <code>-o
+UserKnownHostsFile=$HOME/.openshift_ssh/known_hosts</code> to also work
+around not being able to write to the usual known hosts file. You can
+make git always use your ssh wrapper with the command <code>rhc env set
+GIT_SSH=&lt;PATH_TO_SSH_WRAPPER&gt; --app &lt;YOUR_APP_NAME&gt;</code>.</p>
+<p>After these steps, your Jenkins instance should be able to pull from
+any git repository you have access to on Bitbucket, even if its a
+private repository!</p></div>
+    <footer>
+<p class="meta">
+  <span class="byline author vcard">
+    Posted by <span class="fn">Bing Xia</span>
+  </span>
+<time datetime="2014-04-29T00:00:00-04:00" pubdate>Tue 29 April 2014</time>  <span class="categories">
+    <a class="category" href="http://bxia.net/tag/automatic.html">automatic</a>
+    <a class="category" href="http://bxia.net/tag/ci.html">CI</a>
+  </span>
+</p><div class="sharing">
+</div>    </footer>
+  </article>
 
-  <div class="entry-content"><p>Figured out how to daemonize ipython notebook and emacs daemon using upstart.</p></div>
-  <footer>
-    <a rel="full-article" href="http://bxia.net/blog/2013/08/01/upstart-daemonizing/">Read On &crarr;</a>
-  </footer>
-  		</article>
-  		<article>
-<header>
-      <h1 class="entry-title">
-        <a href="http://bxia.net/blog/2013/07/22/first-post/">First post with Pelican</a>
-      </h1>
-      <p class="meta"><time datetime="2013-07-22T00:00:00-04:00" pubdate>Mon 22 July 2013</time></p>
-</header>
-
-  <div class="entry-content"><p>This is me trying out blogging with Pelican for the first time.</p></div>
-  <footer>
-    <a rel="full-article" href="http://bxia.net/blog/2013/07/22/first-post/">Read On &crarr;</a>
-  </footer>
-  		</article>
-<div class="pagination">
-
-  <br />
-</div></div>
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div>
+  </section>
+</div>
 <aside class="sidebar">
   <section>
     <h1>Recent Posts</h1>
@@ -168,6 +196,9 @@
     <noscript><p><img src="http://piwik3-bxia.rhcloud.com/piwik.php?idsite=1" style="border:0" alt="" /></p></noscript>
 	<script type="text/javascript">
 	  var disqus_shortname = 'bxianet';
+          var disqus_identifier = '/blog/2014/04/29/jenkins-ci-on-openshift/';
+          var disqus_url = 'http://bxia.net/blog/2014/04/29/jenkins-ci-on-openshift/';
+          var disqus_title = 'Jenkins CI on Openshift';
 	  (function() {
 	    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
 	    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
