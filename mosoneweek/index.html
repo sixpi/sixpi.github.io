@@ -1,0 +1,28 @@
+<html>
+    <head>
+        <script src="http://code.jquery.com/jquery-3.2.1.min.js"
+                integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+                crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <button id="eventAdder">Add Object</button>
+    </body>
+    <script type="text/javascript">
+$(document).ready(function() {
+    function clickButton() {
+            $.ajax({
+                async: false,
+  url: "http://msmos.azurewebsites.net/api/events/newevent",
+  type:"POST",
+  contentType:"application/json",
+  success: function(){
+    alert("object added!");
+    }
+            });
+            
+            }
+
+            $("#eventAdder").click(clickButton);
+});
+    </script>
+</html>
